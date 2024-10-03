@@ -1,0 +1,39 @@
+<button mat-flat-button color="primary" (click)="loadData($event)">Load Data</button>
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+        @if (expandable(node)) {
+            <div class="mat-tree-node">
+                <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+                    <mat-icon class="mat-icon-rtl-mirror">
+                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                    </mat-icon>
+                </button>
+                {{node.name}}
+                <ng-container *ngTemplateOutlet="actions; context: {node}"></ng-container>
+            </div>
+    
+            <div *ngIf="treeControl.isExpanded(node)">
+                <ng-container matTreeNodeOutlet></ng-container>
+            </div>
+        } @else {
+            <div class="tree-node__content">
+                <div *ngIf="node.name" class="tree-node__content-name"><span>{{node.name}}</span></div>
+                <ng-container *ngTemplateOutlet="actions; context: {node}"></ng-container>
+            </div>
+        }
+
+        <ng-template let-node="node" #actions>
+            <div class="tree-node__content-actions">
+                <button mat-icon-button (click)="onAddClick($event, node)">
+                    <mat-icon>plus_one</mat-icon>
+                </button>
+                <button mat-icon-button (click)="onDeleteClick($event, node)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <button mat-icon-button (click)="logPathForNode($event, node)">
+                    <mat-icon>search</mat-icon>
+                </button>
+            </div>
+        </ng-template>
+    </mat-tree-node>
+</mat-tree>
